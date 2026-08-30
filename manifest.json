@@ -1,0 +1,22 @@
+{
+    "name": "Tour Date Pricing",
+    "version": "1.0.0",
+    "description": "Mở rộng chức năng giá của extension Travel: thiết lập giá cho từng ngày khởi hành (theo nhóm người lớn / trẻ em / em bé) ngay tại trình soạn thảo tour, hiển thị đúng giá theo ngày trên frontend, áp dụng qua giỏ hàng / thanh toán và ghi nhận đầy đủ vào đơn hàng phục vụ báo cáo tài chính.",
+    "author": "Jankx",
+    "extension_id": "tour-pricing",
+    "caller": {
+        "file": "TourPricingExtension.php",
+        "class": "Jankx\\Extensions\\TourPricing\\TourPricingExtension",
+        "method": "init"
+    },
+    "requirements": {
+        "php": ">=7.4"
+    },
+    "context": [
+        "admin",
+        "frontend",
+        "rest",
+        "ajax"
+    ],
+    "auto_activate": true
+}
