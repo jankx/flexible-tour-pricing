@@ -52,6 +52,7 @@ class TourPricingMetaBox
         $groups = Settings::getGroups();
         $baseGroup = Settings::getBaseGroup();
         $basePrice = PriceRepository::getBasePrice($post->ID);
+        $fieldCalendar = self::FIELD_CALENDAR;
 
         include __DIR__ . '/views/price-calendar.php';
     }

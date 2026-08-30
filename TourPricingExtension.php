@@ -125,7 +125,7 @@ class TourPricingExtension extends AbstractExtension
             'jankx-tour-pricing-frontend',
             $this->get_extension_url() . '/assets/frontend.js',
             [],
-            '1.0.0',
+            $this->asset_version('frontend.js'),
             true
         );
 
@@ -141,7 +141,7 @@ class TourPricingExtension extends AbstractExtension
             'jankx-tour-pricing-frontend',
             $this->get_extension_url() . '/assets/frontend.css',
             [],
-            '1.0.0'
+            $this->asset_version('frontend.css')
         );
     }
 
@@ -164,15 +164,26 @@ class TourPricingExtension extends AbstractExtension
             'jankx-tour-pricing-admin',
             $this->get_extension_url() . '/assets/admin.css',
             [],
-            '1.0.0'
+            $this->asset_version('admin.css')
         );
 
         wp_enqueue_script(
             'jankx-tour-pricing-admin',
             $this->get_extension_url() . '/assets/admin.js',
             [],
-            '1.0.0',
+            $this->asset_version('admin.js'),
             true
         );
+    }
+
+    /**
+     * Cache-busting version based on the asset file's last-modified time so
+     * changes are always picked up without a manual version bump.
+     */
+    protected function asset_version(string $file): string
+    {
+        $path = __DIR__ . '/assets/' . $file;
+
+        return file_exists($path) ? (string) filemtime($path) : '1.0.0';
     }
 }
