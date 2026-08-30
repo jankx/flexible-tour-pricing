@@ -1,0 +1,55 @@
+.jankx-tour-pricing-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.jankx-tour-pricing-group label {
+    min-width: 90px;
+    font-size: 14px;
+}
+
+.jankx-tour-pricing-group .jankx-tour-pricing-qty {
+    width: 80px;
+}
+
+.jankx-tour-pricing-groups {
+    margin: 14px 0;
+}
+
+.jankx-tour-pricing-total {
+    font-weight: 700;
+    font-size: 1.25em;
+    color: var(--wp--preset--color--primary, #c62828);
+}
+
+.jankx-departure-calendar__price {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Booking form price breakdown */
+.jankx-tour-pricing-booking-price {
+    margin: 12px 0;
+    padding: 12px;
+    border: 1px dashed rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.jankx-tour-pricing-booking-price__title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.jankx-tour-pricing-booking-price ul {
+    margin: 0;
+    padding-left: 18px;
+}

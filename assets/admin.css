@@ -1,0 +1,28 @@
+.jankx-tour-pricing-calendar__table th,
+.jankx-tour-pricing-calendar__table td {
+    vertical-align: middle;
+}
+
+.jankx-tour-pricing-calendar__table .jankx-tour-pricing-calendar__price {
+    width: 130px;
+}
+
+.jankx-tour-pricing-calendar__age {
+    display: block;
+    font-weight: 400;
+    color: #888;
+    font-size: 12px;
+}
+
+.jankx-tour-pricing-calendar__note {
+    font-size: 12px;
+    color: #888;
+}
+
+.jankx-tour-pricing-calendar__base {
+    margin-left: 6px;
+}
+
+.jankx-tour-pricing-calendar__empty {
+    color: #888;
+}

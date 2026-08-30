@@ -1,0 +1,14 @@
+{
+    "name": "jankx/tour-pricing-extension",
+    "description": "Tour date pricing extension for the Jankx travel e-commerce flow.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Jankx\\Extensions\\TourPricing\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}
