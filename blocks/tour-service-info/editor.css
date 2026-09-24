@@ -1,0 +1,4 @@
+/* Editor styles for jankx/tour-service-info block */
+.wp-block-jankx-tour-service-info .jtsi-block {
+    pointer-events: none; /* disable interactions inside the editor canvas */
+}

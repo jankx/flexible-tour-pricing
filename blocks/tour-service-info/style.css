@@ -1,0 +1,359 @@
+/* ================================================================
+   jankx/tour-service-info  –  Frontend styles
+   Matches the design: date chips, stepper, footer action bar
+   ================================================================ */
+
+/* Block wrapper */
+.jtsi-block {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+/* Left accent bar (green, matching design) */
+.jtsi-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    padding: 20px 24px 16px;
+    border-left: 4px solid #22c55e;
+    line-height: 1.3;
+}
+
+/* ── Sections ───────────────────────────────────────────────── */
+.jtsi-section {
+    padding: 16px 24px;
+    border-top: 1px solid #f3f4f6;
+}
+
+.jtsi-section__label {
+    font-size: 12px;
+    color: #9ca3af;
+    font-weight: 500;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ── Date chips ─────────────────────────────────────────────── */
+.jtsi-date-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.jtsi-date-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .15s ease;
+    line-height: 1.2;
+    gap: 3px;
+    font-family: inherit;
+}
+
+.jtsi-date-chip:hover {
+    border-color: #22c55e;
+    background: #f0fdf4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34,197,94,.15);
+}
+
+.jtsi-date-chip.is-selected,
+.jtsi-date-chip[aria-pressed="true"] {
+    border-color: #16a34a;
+    background: #dcfce7;
+    box-shadow: 0 0 0 2px rgba(22,163,74,.2);
+}
+
+.jtsi-date-chip__dow {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.jtsi-date-chip.is-selected .jtsi-date-chip__dow {
+    color: #15803d;
+}
+
+.jtsi-date-chip__day {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+}
+
+.jtsi-date-chip.is-selected .jtsi-date-chip__day {
+    color: #15803d;
+}
+
+.jtsi-date-chip__price {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.jtsi-date-chip.is-selected .jtsi-date-chip__price {
+    color: #16a34a;
+}
+
+/* "Tất cả" chip */
+.jtsi-date-chip--all {
+    min-width: 64px;
+    color: #6b7280;
+}
+
+.jtsi-date-chip--all:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.jtsi-date-chip__icon {
+    margin-top: 4px;
+    color: #9ca3af;
+}
+
+/* ── Quantity stepper rows ──────────────────────────────────── */
+.jtsi-section--qty {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 8px;
+}
+
+.jtsi-qty-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.jtsi-qty-row:last-child {
+    border-bottom: none;
+}
+
+.jtsi-qty-row__label {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.jtsi-qty-row__price {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+    min-width: 90px;
+    text-align: right;
+}
+
+/* Stepper control */
+.jtsi-qty-row__stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.jtsi-stepper-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    color: #374151;
+    transition: background .15s ease, color .15s ease;
+    flex-shrink: 0;
+}
+
+.jtsi-stepper-btn:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.jtsi-stepper-btn:active {
+    background: #e5e7eb;
+}
+
+.jtsi-qty-input {
+    width: 42px;
+    text-align: center;
+    border: none;
+    border-left: 1.5px solid #e5e7eb;
+    border-right: 1.5px solid #e5e7eb;
+    background: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    padding: 0;
+    height: 36px;
+    -moz-appearance: textfield;
+    outline: none;
+}
+
+.jtsi-qty-input::-webkit-inner-spin-button,
+.jtsi-qty-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* ── Footer bar ─────────────────────────────────────────────── */
+.jtsi-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px 24px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    flex-wrap: wrap;
+}
+
+.jtsi-footer__total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-right: auto;
+    min-width: 80px;
+    transition: color .2s ease;
+}
+
+.jtsi-footer__total.is-nonzero {
+    color: #16a34a;
+}
+
+/* Buttons */
+.jtsi-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .18s ease, border-color .18s ease, box-shadow .18s ease, transform .12s ease;
+    font-family: inherit;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.jtsi-btn:active {
+    transform: scale(0.97);
+}
+
+.jtsi-btn--outline {
+    background: #fff;
+    border: 1.5px solid #22c55e;
+    color: #16a34a;
+}
+
+.jtsi-btn--outline:hover {
+    background: #f0fdf4;
+    border-color: #16a34a;
+    box-shadow: 0 2px 8px rgba(34,197,94,.2);
+}
+
+.jtsi-btn--primary {
+    background: #22c55e;
+    border: 1.5px solid #22c55e;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(34,197,94,.25);
+}
+
+.jtsi-btn--primary:hover {
+    background: #16a34a;
+    border-color: #16a34a;
+    box-shadow: 0 4px 16px rgba(22,163,74,.35);
+}
+
+/* Disabled state */
+.jtsi-btn:disabled,
+.jtsi-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Empty state */
+.jtsi-empty {
+    padding: 24px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* Editor placeholder */
+.jtsi-placeholder {
+    padding: 32px;
+    text-align: center;
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .jtsi-title {
+        font-size: 16px;
+        padding: 16px 16px 12px;
+    }
+
+    .jtsi-section {
+        padding: 12px 16px;
+    }
+
+    .jtsi-date-chip {
+        min-width: 60px;
+        padding: 8px 10px;
+    }
+
+    .jtsi-date-chip__day {
+        font-size: 18px;
+    }
+
+    .jtsi-qty-row__price {
+        min-width: 72px;
+        font-size: 13px;
+    }
+
+    .jtsi-footer {
+        padding: 12px 16px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .jtsi-footer__total {
+        margin-right: 0;
+        text-align: center;
+    }
+
+    .jtsi-footer__actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .jtsi-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

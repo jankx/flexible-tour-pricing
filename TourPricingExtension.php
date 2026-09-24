@@ -84,6 +84,46 @@ class TourPricingExtension extends AbstractExtension
         // Frontend assets.
         add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+
+        // Gutenberg blocks.
+        add_action('init', [$this, 'register_blocks']);
+    }
+
+    /**
+     * Register all Gutenberg blocks shipped with this extension.
+     */
+    public function register_blocks(): void
+    {
+        $blocksDir = __DIR__ . '/blocks';
+        if (!is_dir($blocksDir)) {
+            return;
+        }
+
+        foreach (glob($blocksDir . '/*/block.json') as $blockJson) {
+            $blockDir = dirname($blockJson);
+            register_block_type($blockDir);
+        }
+
+        // Pass REST config to the block's view.js
+        // (wp_add_inline_script prepends data before the view script runs)
+        $configJson = wp_json_encode([
+            'restUrl' => esc_url_raw(rest_url(Rest\TourPricingController::REST_NAMESPACE)),
+            'nonce'   => wp_create_nonce('wp_rest'),
+            'i18n'    => [
+                'loading'     => __('Đang tải giá...', 'jankx'),
+                'selectDate'  => __('Chọn ngày khởi hành', 'jankx'),
+            ],
+        ]);
+        add_action('wp_footer', function () use ($configJson) {
+            // Only inject if the block view script handle exists
+            if (wp_script_is('jankx-tour-service-info-view-script', 'enqueued')) {
+                wp_add_inline_script(
+                    'jankx-tour-service-info-view-script',
+                    'window.jankxTourPricing = ' . $configJson . ';',
+                    'before'
+                );
+            }
+        });
     }
 
     public function register_meta(): void

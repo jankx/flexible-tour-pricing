@@ -1,0 +1,33 @@
+{
+    "apiVersion": 2,
+    "name": "jankx/tour-service-info",
+    "title": "Thông tin gói dịch vụ",
+    "description": "Hiển thị bảng chọn ngày, số lượng hành khách và nút thêm giỏ hàng / đặt ngay cho tour.",
+    "category": "jankx",
+    "icon": "calendar-alt",
+    "keywords": ["tour", "pricing", "booking", "departure"],
+    "supports": {
+        "html": false,
+        "align": ["wide", "full"]
+    },
+    "attributes": {
+        "tourId": {
+            "type": "integer",
+            "default": 0
+        },
+        "title": {
+            "type": "string",
+            "default": "Thông tin gói dịch vụ"
+        },
+        "showCalendarLink": {
+            "type": "boolean",
+            "default": true
+        }
+    },
+    "textdomain": "jankx",
+    "editorScript": "file:./editor.js",
+    "editorStyle": "file:./editor.css",
+    "style": "file:./style.css",
+    "viewScript": "file:./view.js",
+    "render": "file:./render.php"
+}
