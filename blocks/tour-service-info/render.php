@@ -35,6 +35,7 @@ $showCalLink = !empty($attributes['showCalendarLink']);
 $today       = current_time('Y-m-d');
 $groups      = Settings::getGroups();         // [['id'=>'adult','label'=>'Người lớn'], …]
 $baseGroup   = Settings::getBaseGroup();
+$heading     = trim((string) $content);       // inner block heading (nếu có)
 
 /* ── Departures ────────────────────────────────────────────────── */
 $allDepartures = get_post_meta($tourId, PostTypes::getDeparturesMetaKey((string) get_post_type($tourId)), true);
@@ -66,7 +67,11 @@ $blockAttrs = get_block_wrapper_attributes(['class' => 'jtsi-block']);
      data-tour-id="<?php echo esc_attr($tourId); ?>"
      data-rest-url="<?php echo esc_url(rest_url('jankx/tour-pricing/v1')); ?>">
 
-    <h3 class="jtsi-title"><?php echo esc_html($title); ?></h3>
+    <?php if ($heading !== '') : ?>
+        <div class="jtsi-heading"><?php echo $heading; // Đã qua block render của WP ?></div>
+    <?php else : ?>
+        <h3 class="jtsi-title"><?php echo esc_html($title); ?></h3>
+    <?php endif; ?>
 
     <?php if (!empty($chipDates)) : ?>
     <!-- ── Date chip section ──────────────────────────────────── -->

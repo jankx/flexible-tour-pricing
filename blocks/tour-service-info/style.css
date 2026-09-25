@@ -14,7 +14,8 @@
 }
 
 /* Left accent bar (green, matching design) */
-.jtsi-title {
+.jtsi-title,
+.jtsi-heading {
     font-size: 18px;
     font-weight: 700;
     color: #111827;
@@ -22,6 +23,35 @@
     padding: 20px 24px 16px;
     border-left: 4px solid #22c55e;
     line-height: 1.3;
+}
+
+/* Inner-block heading (core/heading / core/paragraph) */
+.jtsi-heading > * {
+    margin: 0;
+    color: #111827;
+}
+
+.jtsi-heading > .wp-block-heading:first-child {
+    margin: 0;
+}
+
+.jtsi-heading h1,
+.jtsi-heading h2,
+.jtsi-heading h3,
+.jtsi-heading h4,
+.jtsi-heading h5,
+.jtsi-heading h6 {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.jtsi-heading p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-top: 6px;
 }
 
 /* ── Sections ───────────────────────────────────────────────── */

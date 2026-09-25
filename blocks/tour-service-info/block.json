@@ -24,6 +24,7 @@
             "default": true
         }
     },
+    "allowedBlocks": ["core/heading", "core/paragraph"],
     "textdomain": "jankx",
     "editorScript": "file:./editor.js",
     "editorStyle": "file:./editor.css",
