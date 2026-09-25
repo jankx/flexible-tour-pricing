@@ -14,15 +14,15 @@
  */
 
 use Jankx\Extensions\TourPricing\Pricing\PriceComputer;
+use Jankx\Extensions\TourPricing\PostTypes;
 use Jankx\Extensions\TourPricing\Settings;
-use Jankx\Extensions\TourPricing\Constants;
 
 // Resolve the tour ID: attribute → current singular post.
 $tourId = (int) ($attributes['tourId'] ?? 0);
 if (!$tourId) {
     $tourId = get_the_ID() ?: get_queried_object_id();
 }
-if (!$tourId || get_post_type($tourId) !== Constants::TOUR_POST_TYPE) {
+if (!$tourId || !PostTypes::supports((string) get_post_type($tourId))) {
     // In the editor preview show a placeholder instead of nothing.
     if (defined('REST_REQUEST') && REST_REQUEST) {
         echo '<div class="jtsi-placeholder">' . esc_html__('Thông tin gói dịch vụ (cần mở trong trang tour)', 'jankx') . '</div>';
@@ -37,7 +37,7 @@ $groups      = Settings::getGroups();         // [['id'=>'adult','label'=>'Ngư�
 $baseGroup   = Settings::getBaseGroup();
 
 /* ── Departures ────────────────────────────────────────────────── */
-$allDepartures = get_post_meta($tourId, '_tour_departures', true);
+$allDepartures = get_post_meta($tourId, PostTypes::getDeparturesMetaKey((string) get_post_type($tourId)), true);
 $allDepartures = is_array($allDepartures) ? $allDepartures : [];
 
 $futureDates = [];

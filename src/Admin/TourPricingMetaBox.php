@@ -2,8 +2,8 @@
 
 namespace Jankx\Extensions\TourPricing\Admin;
 
-use Jankx\Extensions\TourPricing\Constants;
 use Jankx\Extensions\TourPricing\Pricing\PriceRepository;
+use Jankx\Extensions\TourPricing\PostTypes;
 use Jankx\Extensions\TourPricing\Settings;
 
 /**
@@ -22,7 +22,10 @@ class TourPricingMetaBox
     public function register(): void
     {
         add_action('add_meta_boxes', [$this, 'add_meta_boxes']);
-        add_action('save_post_' . Constants::TOUR_POST_TYPE, [$this, 'save']);
+
+        foreach (PostTypes::getSupported() as $postType) {
+            add_action('save_post_' . $postType, [$this, 'save']);
+        }
     }
 
     public function add_meta_boxes(): void
@@ -31,21 +34,24 @@ class TourPricingMetaBox
             return;
         }
 
-        add_meta_box(
-            'jankx_tour_price_calendar',
-            __('Giá theo ngày khởi hành', 'jankx'),
-            [$this, 'render'],
-            Constants::TOUR_POST_TYPE,
-            'normal',
-            'high'
-        );
+        foreach (PostTypes::getSupported() as $postType) {
+            add_meta_box(
+                'jankx_tour_price_calendar',
+                __('Giá theo ngày khởi hành', 'jankx'),
+                [$this, 'render'],
+                $postType,
+                'normal',
+                'high'
+            );
+        }
     }
 
     public function render(\WP_Post $post): void
     {
         wp_nonce_field(self::NONCE_ACTION, self::NONCE_NAME);
 
-        $departures = get_post_meta($post->ID, '_tour_departures', true);
+        $departuresKey = PostTypes::getDeparturesMetaKey($post->post_type);
+        $departures = get_post_meta($post->ID, $departuresKey, true);
         $departures = is_array($departures) ? $departures : [];
 
         $calendar = PriceRepository::get($post->ID);

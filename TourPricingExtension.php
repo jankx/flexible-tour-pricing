@@ -132,22 +132,24 @@ class TourPricingExtension extends AbstractExtension
             return;
         }
 
-        register_meta('post', '_tour_price_calendar', [
-            'object_subtype' => Constants::TOUR_POST_TYPE,
-            'type' => 'array',
-            'description' => 'Giá theo ngày khởi hành (map ngày → giá theo nhóm khách)',
-            'single' => true,
-            'default' => [],
-            'show_in_rest' => [
-                'schema' => [
-                    'type' => 'array',
-                    'items' => ['type' => 'object'],
+        foreach (PostTypes::getSupported() as $postType) {
+            register_meta('post', '_tour_price_calendar', [
+                'object_subtype' => $postType,
+                'type' => 'array',
+                'description' => 'Giá theo ngày khởi hành (map ngày → giá theo nhóm khách)',
+                'single' => true,
+                'default' => [],
+                'show_in_rest' => [
+                    'schema' => [
+                        'type' => 'array',
+                        'items' => ['type' => 'object'],
+                    ],
                 ],
-            ],
-            'auth_callback' => function () {
-                return current_user_can('edit_posts');
-            },
-        ]);
+                'auth_callback' => function () {
+                    return current_user_can('edit_posts');
+                },
+            ]);
+        }
     }
 
     public function enqueue_frontend_assets(): void
@@ -156,8 +158,8 @@ class TourPricingExtension extends AbstractExtension
             return;
         }
 
-        $tourType = Constants::TOUR_POST_TYPE;
-        if (!is_singular($tourType)) {
+        $supported = PostTypes::getSupported();
+        if (!is_singular($supported)) {
             return;
         }
 
@@ -196,7 +198,7 @@ class TourPricingExtension extends AbstractExtension
             return;
         }
 
-        if ($screen->post_type !== Constants::TOUR_POST_TYPE) {
+        if (!PostTypes::supports($screen->post_type)) {
             return;
         }
 

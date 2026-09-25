@@ -2,7 +2,6 @@
 
 namespace Jankx\Extensions\TourPricing\Admin;
 
-use Jankx\Extensions\TourPricing\Constants;
 use Jankx\Extensions\TourPricing\Settings;
 
 /**
@@ -93,8 +92,11 @@ class SettingsPage
 
     public function register_page(): void
     {
+        $supported = \Jankx\Extensions\TourPricing\PostTypes::getSupported();
+        $parent = 'edit.php?post_type=' . (reset($supported) ?: 'tour');
+
         add_submenu_page(
-            'edit.php?post_type=' . Constants::TOUR_POST_TYPE,
+            $parent,
             __('Giá tour theo ngày', 'jankx'),
             __('Giá theo ngày', 'jankx'),
             'manage_options',

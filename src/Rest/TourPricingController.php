@@ -4,6 +4,7 @@ namespace Jankx\Extensions\TourPricing\Rest;
 
 use Jankx\Extensions\TourPricing\Pricing\PriceComputer;
 use Jankx\Extensions\TourPricing\Pricing\PriceRepository;
+use Jankx\Extensions\TourPricing\PostTypes;
 use Jankx\Extensions\TourPricing\Settings;
 
 /**
@@ -71,7 +72,7 @@ class TourPricingController
         $qtyMap = (array) $request->get_param('groups');
 
         $tour = get_post($tourId);
-        if (!$tour || $tour->post_type !== \Jankx\Extensions\TourPricing\Constants::TOUR_POST_TYPE) {
+        if (!$tour || !PostTypes::supports((string) $tour->post_type)) {
             return new \WP_REST_Response([
                 'success' => false,
                 'message' => __('Tour không tồn tại.', 'jankx'),

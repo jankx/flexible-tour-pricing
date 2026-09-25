@@ -2,6 +2,8 @@
 
 namespace Jankx\Extensions\TourPricing\Pricing;
 
+use Jankx\Extensions\TourPricing\PostTypes;
+
 /**
  * Reads / writes the per-date price calendar stored on a tour.
  *
@@ -105,7 +107,11 @@ class PriceRepository
 
     public static function getBasePrice(int $tourId): float
     {
-        return (float) get_post_meta((int) $tourId, '_tour_price', true);
+        $tourId = (int) $tourId;
+        $postType = (string) (get_post_type($tourId) ?: '');
+        $metaKey = PostTypes::getBasePriceMetaKey($postType);
+
+        return (float) get_post_meta($tourId, $metaKey, true);
     }
 
     /**

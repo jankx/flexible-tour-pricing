@@ -2,8 +2,8 @@
 
 namespace Jankx\Extensions\TourPricing\Frontend;
 
-use Jankx\Extensions\TourPricing\Constants;
 use Jankx\Extensions\TourPricing\Pricing\PriceComputer;
+use Jankx\Extensions\TourPricing\PostTypes;
 use Jankx\Extensions\TourPricing\Settings;
 
 /**
@@ -41,11 +41,12 @@ class AddToCartIntegration
             return $formBody;
         }
 
-        if ($productType !== Constants::TOUR_POST_TYPE) {
+        if (!PostTypes::supports((string) $productType)) {
             return $formBody;
         }
 
-        $departures = get_post_meta((int) $postId, '_tour_departures', true);
+        $departuresKey = PostTypes::getDeparturesMetaKey((string) $productType);
+        $departures = get_post_meta((int) $postId, $departuresKey, true);
         $departures = is_array($departures) ? $departures : [];
         if (empty($departures)) {
             return $formBody;
@@ -136,7 +137,7 @@ class AddToCartIntegration
         }
 
         $tourId = $cartItem->getProductId();
-        if (get_post_type($tourId) !== Constants::TOUR_POST_TYPE) {
+        if (!PostTypes::supports((string) get_post_type($tourId))) {
             return (float) $subtotal;
         }
 
@@ -158,7 +159,7 @@ class AddToCartIntegration
             return $price;
         }
 
-        if (get_post_type((int) $postId) !== Constants::TOUR_POST_TYPE) {
+        if (!PostTypes::supports((string) get_post_type((int) $postId))) {
             return $price;
         }
 
@@ -186,7 +187,7 @@ class AddToCartIntegration
         }
 
         $tourId = (int) $tourId;
-        if (!$tourId || get_post_type($tourId) !== Constants::TOUR_POST_TYPE) {
+        if (!$tourId || !PostTypes::supports((string) get_post_type($tourId))) {
             return $current;
         }
 

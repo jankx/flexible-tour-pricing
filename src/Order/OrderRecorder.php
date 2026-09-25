@@ -2,8 +2,8 @@
 
 namespace Jankx\Extensions\TourPricing\Order;
 
-use Jankx\Extensions\TourPricing\Constants;
 use Jankx\Extensions\TourPricing\Pricing\PriceComputer;
+use Jankx\Extensions\TourPricing\PostTypes;
 use Jankx\Extensions\TourPricing\Settings;
 
 /**
@@ -45,7 +45,7 @@ class OrderRecorder
         }
 
         $tourId = (int) $item['product_id'];
-        if (get_post_type($tourId) !== Constants::TOUR_POST_TYPE) {
+        if (!PostTypes::supports((string) get_post_type($tourId))) {
             return $item;
         }
 
