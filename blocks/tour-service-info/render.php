@@ -30,7 +30,7 @@ if (!$tourId || !PostTypes::supports((string) get_post_type($tourId))) {
     return;
 }
 
-$title       = !empty($attributes['title']) ? $attributes['title'] : __('Thông tin gói dịch vụ', 'jankx');
+$title       = (string) ($attributes['title'] ?? '');
 $showCalLink = !empty($attributes['showCalendarLink']);
 $today       = current_time('Y-m-d');
 $groups      = Settings::getGroups();         // [['id'=>'adult','label'=>'Người lớn'], …]

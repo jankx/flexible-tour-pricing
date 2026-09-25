@@ -17,7 +17,7 @@
         },
         "title": {
             "type": "string",
-            "default": "Thông tin gói dịch vụ"
+            "default": ""
         },
         "showCalendarLink": {
             "type": "boolean",
