@@ -14,7 +14,6 @@
 }
 
 /* Left accent bar (green, matching design) */
-.jtsi-title,
 .jtsi-heading {
     font-size: 18px;
     font-weight: 700;
@@ -343,11 +342,6 @@
 
 /* ── Responsive ─────────────────────────────────────────────── */
 @media (max-width: 600px) {
-    .jtsi-title {
-        font-size: 16px;
-        padding: 16px 16px 12px;
-    }
-
     .jtsi-section {
         padding: 12px 16px;
     }

@@ -30,7 +30,6 @@ if (!$tourId || !PostTypes::supports((string) get_post_type($tourId))) {
     return;
 }
 
-$title       = (string) ($attributes['title'] ?? '');
 $showCalLink = !empty($attributes['showCalendarLink']);
 $today       = current_time('Y-m-d');
 $groups      = Settings::getGroups();         // [['id'=>'adult','label'=>'Người lớn'], …]
@@ -79,8 +78,6 @@ $blockAttrs = get_block_wrapper_attributes(['class' => 'jtsi-block']);
 
     <?php if ($heading !== '') : ?>
         <div class="jtsi-heading"><?php echo $heading; // Đã qua block render của WP ?></div>
-    <?php else : ?>
-        <h3 class="jtsi-title"><?php echo esc_html($title); ?></h3>
     <?php endif; ?>
 
     <?php if (!empty($chipDates)) : ?>
