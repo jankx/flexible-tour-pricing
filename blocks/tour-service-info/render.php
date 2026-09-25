@@ -50,6 +50,16 @@ foreach ($allDepartures as $row) {
 }
 ksort($futureDates);
 
+// Chưa cấu hình lịch khởi hành? Mặc định hiện 7 ngày tiếp theo với
+// giá hiện tại của tour/trải nghiệm/dịch vụ (PriceComputer tự fallback
+// về base price cho ngày không có giá lịch).
+if (empty($futureDates)) {
+    for ($i = 0; $i < 7; $i++) {
+        $date = date('Y-m-d', strtotime($today . " +{$i} day"));
+        $futureDates[$date] = ['date' => $date];
+    }
+}
+
 // Up to 6 chips; rest accessible via "Tất cả" popover (handled by JS).
 $chipDates  = array_slice($futureDates, 0, 6, true);
 
