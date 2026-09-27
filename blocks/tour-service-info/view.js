@@ -247,7 +247,8 @@
             },
             body: JSON.stringify({
                 lines: lines,
-                args: { departure_date: date }
+                args: { departure_date: date },
+                mode: bookNow ? 'quick' : 'normal'
             })
         })
         .then(function (r) { return r.json(); })
@@ -262,8 +263,10 @@
             btn.textContent = 'Đã thêm ✓';
 
             if (bookNow) {
-                if (window.jankxEcommerce && window.jankxEcommerce.cartUrl) {
-                    window.location.href = window.jankxEcommerce.cartUrl;
+                var jankx = window.jankxEcommerce || {};
+                var destination = jankx.checkoutUrl || jankx.cartUrl;
+                if (destination) {
+                    window.location.href = destination;
                 }
                 return;
             }
