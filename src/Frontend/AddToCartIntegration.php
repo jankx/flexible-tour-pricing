@@ -21,6 +21,8 @@ class AddToCartIntegration
     {
         add_filter('jankx/ecommerce/add_to_cart/form', [$this, 'replaceFormFields'], 10, 5);
         add_filter('jankx/ecommerce/cart/item/subtotal', [$this, 'cartItemSubtotal'], 10, 2);
+        add_filter('jankx/ecommerce/cart/item/unit_price', [$this, 'cartItemUnitPrice'], 10, 2);
+        add_filter('jankx/ecommerce/cart/item/variation_label', [$this, 'variationLabel'], 10, 3);
         add_filter('jankx/travel/tour/starting_price', [$this, 'startingPrice'], 10, 2);
         add_filter('jankx/travel/departure_calendar/price', [$this, 'departureCalendarPrice'], 10, 3);
     }
@@ -117,7 +119,11 @@ class AddToCartIntegration
 
     /**
      * Recompute the cart line subtotal from the group quantity breakdown when
-     * present on the item's args.
+     * present on the item's args (legacy single-line model).
+     *
+     * With the variation model each group is its own cart line, so its unit
+     * price is resolved by cartItemUnitPrice() and the default subtotal of
+     * unit_price × quantity already applies.
      *
      * @param float $subtotal
      * @param \Jankx\Extensions\Ecommerce\Cart\CartItem $cartItem
@@ -129,6 +135,12 @@ class AddToCartIntegration
         }
 
         $args = $cartItem->getArgs();
+
+        // Variation model: subtotal = unit_price × qty is already correct.
+        if (!empty($args['variation_id'])) {
+            return (float) $subtotal;
+        }
+
         $date = (string) ($args['departure_date'] ?? '');
         $qtyMap = is_array($args['group_qty'] ?? null) ? $args['group_qty'] : [];
 
@@ -145,6 +157,61 @@ class AddToCartIntegration
         $qty = PriceComputer::normalizeQuantities($qtyMap);
 
         return PriceComputer::calculateSubtotal($prices, $qty);
+    }
+
+    /**
+     * Resolve the unit price for a variation cart line (one passenger group
+     * on a given departure date).
+     *
+     * @param float $price
+     * @param \Jankx\Extensions\Ecommerce\Cart\CartItem $cartItem
+     */
+    public function cartItemUnitPrice($price, $cartItem): float
+    {
+        if (!Settings::isEnabled()) {
+            return (float) $price;
+        }
+
+        $args = $cartItem->getArgs();
+        $date = (string) ($args['departure_date'] ?? '');
+        $variationId = (string) ($args['variation_id'] ?? '');
+
+        if ($date === '' || $variationId === '') {
+            return (float) $price;
+        }
+
+        $tourId = $cartItem->getProductId();
+        if (!PostTypes::supports((string) get_post_type($tourId))) {
+            return (float) $price;
+        }
+
+        return PriceComputer::getGroupPrice($tourId, $date, $variationId);
+    }
+
+    /**
+     * Resolve the human label for a variation (passenger group).
+     *
+     * @param string $label
+     * @param string $variationId
+     * @param \Jankx\Extensions\Ecommerce\Cart\CartItem|null $cartItem
+     */
+    public function variationLabel($label, $variationId, $cartItem = null): string
+    {
+        if (!Settings::isEnabled() || $variationId === '') {
+            return (string) $label;
+        }
+
+        if (!$cartItem || !PostTypes::supports((string) get_post_type($cartItem->getProductId()))) {
+            return (string) $label;
+        }
+
+        foreach (Settings::getGroups() as $group) {
+            if ($group['id'] === $variationId) {
+                return $group['label'];
+            }
+        }
+
+        return (string) $label;
     }
 
     /**

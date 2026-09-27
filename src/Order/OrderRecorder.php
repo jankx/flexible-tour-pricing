@@ -23,8 +23,14 @@ class OrderRecorder
     }
 
     /**
-     * Enrich an order item with the group price breakdown coming from the
-     * cart item args (departure_date + group_qty).
+     * Enrich an order item with the price/date details.
+     *
+     * Two models are supported:
+     *  – Variation model (current): each order item is one passenger group,
+     *    the args carry `variation_id` + `departure_date` and the unit price
+     *    is the date+group price.
+     *  – Legacy single-line model: a `group_qty` map is expanded into a full
+     *    price breakdown stored as item meta.
      *
      * @param array $item
      * @param \Jankx\Extensions\Ecommerce\Cart\CartItem $cartItem
@@ -38,14 +44,44 @@ class OrderRecorder
 
         $args = is_callable([$cartItem, 'getArgs']) ? $cartItem->getArgs() : [];
         $date = (string) ($args['departure_date'] ?? '');
+        $variationId = (string) ($args['variation_id'] ?? '');
         $qtyMap = is_array($args['group_qty'] ?? null) ? $args['group_qty'] : [];
-
-        if ($date === '' || empty($qtyMap)) {
-            return $item;
-        }
 
         $tourId = (int) $item['product_id'];
         if (!PostTypes::supports((string) get_post_type($tourId))) {
+            return $item;
+        }
+
+        // Variation model: one group per order item.
+        if ($date !== '' && $variationId !== '') {
+            $prices = PriceComputer::getPricesForDate($tourId, $date);
+            $unitPrice = (float) ($prices[$variationId] ?? 0);
+            $quantity = (int) ($item['quantity'] ?? 0);
+
+            $item['unit_price'] = $unitPrice;
+            $item['meta']['departure_date'] = $date;
+            $item['meta']['variation_id'] = $variationId;
+            $item['meta']['variation_label'] = $this->groupLabel($variationId);
+            $item['meta']['price_breakdown'] = [
+                'date'       => $date,
+                'currency'   => 'VND',
+                'prices'     => $prices,
+                'quantities' => [$variationId => $quantity],
+                'line_items' => [[
+                    'group'      => $variationId,
+                    'label'      => $this->groupLabel($variationId),
+                    'qty'        => $quantity,
+                    'unit_price' => $unitPrice,
+                    'total'      => (float) round($unitPrice * $quantity, 2),
+                ]],
+                'subtotal'   => (float) round($unitPrice * $quantity, 2),
+            ];
+
+            return $item;
+        }
+
+        // Legacy: expand a group quantity map.
+        if ($date === '' || empty($qtyMap)) {
             return $item;
         }
 

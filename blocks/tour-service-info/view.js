@@ -191,9 +191,9 @@
             addBtn.addEventListener('click', function () {
                 if (!selectedDate) { return; }
                 var qty  = readQty();
-                var form = buildCartForm(tourId, selectedDate, qty, 'add');
-                document.body.appendChild(form);
-                form.submit();
+                var lines = buildLines(tourId, qty);
+                if (!lines.length) { return; }
+                submitBatch(lines, selectedDate, false, addBtn);
             });
         }
 
@@ -203,45 +203,82 @@
             bookBtn.addEventListener('click', function () {
                 if (!selectedDate) { return; }
                 var qty  = readQty();
-                var form = buildCartForm(tourId, selectedDate, qty, 'book');
-                document.body.appendChild(form);
-                form.submit();
+                var lines = buildLines(tourId, qty);
+                if (!lines.length) { return; }
+                submitBatch(lines, selectedDate, true, bookBtn);
             });
         }
     }
 
-    /* ── build a hidden form to submit to WC / custom cart ──── */
-    function buildCartForm(tourId, date, qtyMap, action) {
-        var form = document.createElement('form');
-        form.method = 'post';
-        form.style.display = 'none';
-
-        // Action URL: reuse current page – WooCommerce / custom handler picks it up
-        form.action = window.location.href;
-
-        function addField(name, value) {
-            var inp = document.createElement('input');
-            inp.type = 'hidden';
-            inp.name = name;
-            inp.value = value;
-            form.appendChild(inp);
-        }
-
-        addField('add-to-cart',    tourId);
-        addField('product_id',     tourId);
-        addField('departure_date', date);
-        addField('jankx_action',   action === 'book' ? 'book_now' : 'add_to_cart');
-
-        Object.keys(qtyMap).forEach(function (g) {
-            addField('group_qty[' + g + ']', qtyMap[g]);
+    /* ── build batch lines (one per ticket group) ─────────── */
+    function buildLines(tourId, qtyMap) {
+        var lines = [];
+        Object.keys(qtyMap || {}).forEach(function (g) {
+            var qty = Math.max(0, parseInt(qtyMap[g], 10) || 0);
+            if (qty <= 0) { return; }
+            lines.push({
+                product_id: parseInt(tourId, 10) || 0,
+                variation_id: g,
+                quantity: qty
+            });
         });
+        return lines;
+    }
 
-        // WP nonce if available
-        if (config.nonce) {
-            addField('jankx_nonce', config.nonce);
+    /* ── POST lines to the shared e-commerce batch endpoint ── */
+    function submitBatch(lines, date, bookNow, btn) {
+        var restUrl = (window.jankxEcommerce && window.jankxEcommerce.restUrl)
+            ? window.jankxEcommerce.restUrl
+            : '';
+        if (!restUrl) {
+            // Fall back to admin-ajax-style POST for legacy setups.
+            return;
         }
 
-        return form;
+        var originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = bookNow ? 'Đang xử lý...' : 'Đang thêm...';
+
+        fetch(restUrl + '/cart/items/batch', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                lines: lines,
+                args: { departure_date: date }
+            })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+            if (!res || !res.success) {
+                alert((res && res.message) || 'Không thể thêm vào giỏ hàng.');
+                btn.disabled = false;
+                btn.textContent = originalText;
+                return;
+            }
+
+            btn.textContent = 'Đã thêm ✓';
+
+            if (bookNow) {
+                if (window.jankxEcommerce && window.jankxEcommerce.cartUrl) {
+                    window.location.href = window.jankxEcommerce.cartUrl;
+                }
+                return;
+            }
+
+            document.dispatchEvent(new CustomEvent('jankx:cart-updated'));
+            setTimeout(function () {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }, 1500);
+        })
+        .catch(function () {
+            alert('Lỗi kết nối. Vui lòng thử lại.');
+            btn.disabled = false;
+            btn.textContent = originalText;
+        });
     }
 
     /* ── boot ───────────────────────────────────────────────── */
