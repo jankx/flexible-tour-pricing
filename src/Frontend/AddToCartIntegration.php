@@ -3,6 +3,7 @@
 namespace Jankx\Extensions\TourPricing\Frontend;
 
 use Jankx\Extensions\TourPricing\Pricing\PriceComputer;
+use Jankx\Extensions\TourPricing\Pricing\PriceRepository;
 use Jankx\Extensions\TourPricing\PostTypes;
 use Jankx\Extensions\TourPricing\Settings;
 
@@ -226,11 +227,21 @@ class AddToCartIntegration
             return $price;
         }
 
-        if (!PostTypes::supports((string) get_post_type((int) $postId))) {
+        $postId = (int) $postId;
+        $postType = (string) get_post_type($postId);
+
+        if (!PostTypes::supports($postType)) {
             return $price;
         }
 
-        $min = PriceComputer::getStartingPrice((int) $postId);
+        // Without departure dates this extension has no opinion: getStartingPrice()
+        // would fall back to the charge price and overwrite the advertised
+        // "from" price the block already resolved.
+        if (!PriceRepository::getDates($postId)) {
+            return $price;
+        }
+
+        $min = PriceComputer::getStartingPrice($postId);
 
         if ($min > 0) {
             return (string) round($min);
