@@ -6,11 +6,11 @@ namespace Jankx\Extensions\TourPricing;
  * Post type registry for the Tour Date Pricing extension.
  *
  * The extension ships supporting the "tour" post type. Other extensions can
- * extend it to more post types (e.g. "experience") using one of:
+ * extend it to more post types (e.g. "place") using one of:
  *
- *   - \Jankx\Extensions\TourPricing\PostTypes::register('experience');
+ *   - \Jankx\Extensions\TourPricing\PostTypes::register('place');
  *   - the `jankx/tour_pricing/supported_post_types` filter:
- *         add_filter('jankx/tour_pricing/supported_post_types', fn ($types) => array_merge($types, ['experience']));
+ *         add_filter('jankx/tour_pricing/supported_post_types', fn ($types) => array_merge($types, ['place']));
  *
  * A post type may also override which meta keys carry the base price and the
  * departure schedule (per-post-type, filterable):
