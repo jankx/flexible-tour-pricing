@@ -118,8 +118,8 @@
                     }
                     totalEl.textContent = fmt(res.subtotal);
                     totalEl.classList.toggle('is-nonzero', res.subtotal > 0);
-                    if (addBtn) { addBtn.disabled = false; }
-                    if (bookBtn) { bookBtn.disabled = false; }
+                    if (addBtn) { addBtn.disabled = res.subtotal <= 0; }
+                    if (bookBtn) { bookBtn.disabled = res.subtotal <= 0; }
                 } else {
                     totalEl.textContent = '—';
                     totalEl.classList.remove('is-nonzero');
@@ -127,8 +127,6 @@
             }).catch(function () {
                 totalEl.textContent = '—';
                 totalEl.classList.remove('is-nonzero');
-                if (addBtn) { addBtn.disabled = false; }
-                if (bookBtn) { bookBtn.disabled = false; }
             });
         }
 
