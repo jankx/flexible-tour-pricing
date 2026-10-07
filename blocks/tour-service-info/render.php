@@ -80,6 +80,16 @@ $blockAttrs = get_block_wrapper_attributes(['class' => 'jtsi-block']);
         <div class="jtsi-heading"><?php echo $heading; // Đã qua block render của WP ?></div>
     <?php endif; ?>
 
+    <?php 
+    $startingPrice = PriceComputer::getStartingPrice($tourId);
+    if ($startingPrice == 0 && class_exists('\Jankx\Extensions\Product\Forms\ProductOrderForm')) {
+        // Price is not set up, show the cart form
+        wp_enqueue_style('jankx-product-order-form');
+        wp_enqueue_script('jankx-product-order-form');
+        echo \Jankx\Extensions\Product\Forms\ProductOrderForm::render($tourId);
+    } else {
+    ?>
+
     <?php if (!empty($chipDates)) : ?>
     <!-- ── Date chip section ──────────────────────────────────── -->
     <div class="jtsi-section">
@@ -179,4 +189,5 @@ $blockAttrs = get_block_wrapper_attributes(['class' => 'jtsi-block']);
 
     <!-- Hidden date input wired by JS -->
     <input type="hidden" name="departure_date" class="jtsi-hidden-date" value="">
+    <?php } ?>
 </div>
